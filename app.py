@@ -144,7 +144,7 @@ Rules:
         return self.generate_pdf(response.content)
 
 
-## -----------------------------
+# -----------------------------
 # Page Configuration
 # -----------------------------
 st.set_page_config(
@@ -159,38 +159,27 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-        /* App background */
         .stApp {
             background-color: #f7f3ea;
-            color: #000000  ;
+            color: #000000;
             font-family: "Segoe UI", sans-serif;
         }
-
-        /* Sidebar styling */
         section[data-testid="stSidebar"] {
             background-color: #efe8d8;
             padding: 2rem 1.5rem;
         }
-
         section[data-testid="stSidebar"] * {
             color: #2f2f2f !important;
         }
-
-        /* Headings */
         h1, h2, h3 {
             color: #000000;
-            
         }
-
-        /* Text area & input */
         textarea, input[type="text"] {
             background-color: #fffdf8 !important;
             color: #000000 !important;
             border: 1px solid #c5c1b6 !important;
             border-radius: 8px !important;
         }
-
-        /* File uploader */
         div[data-testid="stFileUploader"] {
             background-color: #fffdf8;
             color: #000000;
@@ -198,23 +187,17 @@ st.markdown(
             padding: 0.75rem;
             border: 1px dashed #b7b2a3;
         }
-
-        /* Buttons */
         .stButton > button {
             background-color: #6b705c;
             color: #000000;
-            
             border-radius: 8px;
             padding: 0.6rem 1.5rem;
             font-weight: 500;
             border: none;
         }
-
         .stButton > button:hover {
             background-color: #5a5f4b;
         }
-
-        /* Result box */
         .result-box {
             background-color: #ffffff;
             color: #000000;
@@ -255,6 +238,12 @@ with st.sidebar:
     st.caption("Designed for academic, examination, and research use.")
 
 # -----------------------------
+# Initialize Agents
+# -----------------------------
+finder_agent = ResearchPaperFinderAgent()
+report_agent = ResearchReportAgent()
+
+# -----------------------------
 # Main Content
 # -----------------------------
 if mode == "Research Paper Finder":
@@ -280,38 +269,20 @@ if mode == "Research Paper Finder":
         if not user_text.strip() and not uploaded_pdf:
             st.warning("Please provide text input or upload a PDF.")
         else:
-            if st.button("Find Research Paper", key="finder_button"):
-                if not user_text.strip() and not uploaded_pdf:
-                    st.warning("Please provide text input or upload a PDF.")
-                else:
-                    try:
-                        result = finder_agent.run(user_text)
-                        st.markdown(
-                            f"""
-                            <div class="result-box">
-                                <strong>Result</strong><br><br>
-                                {result}
-                            </div>
-                            """,
-                            unsafe_allow_html=True
-                        )
-                    except Exception as e:
-                        st.error(f"Error: {e}")
+            try:
+                result = finder_agent.run(user_text)
+                st.markdown(
+                    f"""
+                    <div class="result-box">
+                        <strong>Result</strong><br><br>
+                        {result}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+            except Exception as e:
+                st.error(f"Error: {e}")
 
-
-            st.markdown(
-                f"""
-                <div class="result-box">
-                    <strong>Result</strong><br><br>
-                    {result}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-
-# -----------------------------
-# Research Report Generator
-# -----------------------------
 else:
     st.markdown("## Research Report Generator")
     st.markdown(
@@ -335,40 +306,15 @@ else:
         if not user_text.strip() and not uploaded_pdf:
             st.warning("Please provide a topic or upload a PDF.")
         else:
-            if st.button("Generate Research Report", key="report_button"):
-                if not user_text.strip() and not uploaded_pdf:
-                    st.warning("Please provide a topic or upload a PDF.")
-                else:
-                    try:
-                        pdf_path = report_agent.run(user_text, uploaded_pdf)
-                        with open(pdf_path, "rb") as f:
-                            st.download_button(
-                                label="Download Research Report (PDF)",
-                                data=f,
-                                file_name="research_report.pdf",
-                                mime="application/pdf",
-                                key="download_report"
-                            )
-                    except Exception as e:
-                        st.error(f"Error: {e}")
-
-
-            with open(pdf_path, "rb") as f:
-                st.download_button(
-                    label="Download Research Report (PDF)",
-                    data=f,
-                    file_name="research_report.pdf",
-                    mime="application/pdf",
-                    key="download_report"
-                )
-# Initialize agents
-finder_agent = ResearchPaperFinderAgent()
-report_agent = ResearchReportAgent()
-
-
-
-
-
-
-
-
+            try:
+                pdf_path = report_agent.run(user_text, uploaded_pdf)
+                with open(pdf_path, "rb") as f:
+                    st.download_button(
+                        label="Download Research Report (PDF)",
+                        data=f,
+                        file_name="research_report.pdf",
+                        mime="application/pdf",
+                        key="download_report_button"
+                    )
+            except Exception as e:
+                st.error(f"Error: {e}")
