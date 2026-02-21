@@ -282,7 +282,7 @@ if mode == "Research Paper Finder":
         else:
             if st.button("Find Research Paper", key="finder_button"):
                 if not user_text.strip() and not uploaded_pdf:
-        st.warning("Please provide text input or upload a PDF.")
+                    st.warning("Please provide text input or upload a PDF.")
                 else:
                     try:
                         result = finder_agent.run(user_text)
@@ -368,4 +368,5 @@ report_agent = ResearchReportAgent()
 
 
         st.error(str(e))
+
 
