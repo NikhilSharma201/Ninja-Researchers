@@ -281,22 +281,22 @@ if mode == "Research Paper Finder":
             st.warning("Please provide text input or upload a PDF.")
         else:
             if st.button("Find Research Paper", key="finder_button"):
-    if not user_text.strip() and not uploaded_pdf:
+                if not user_text.strip() and not uploaded_pdf:
         st.warning("Please provide text input or upload a PDF.")
-    else:
-        try:
-            result = finder_agent.run(user_text)
-            st.markdown(
-                f"""
-                <div class="result-box">
-                    <strong>Result</strong><br><br>
-                    {result}
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-        except Exception as e:
-            st.error(f"Error: {e}")
+                else:
+                    try:
+                        result = finder_agent.run(user_text)
+                        st.markdown(
+                            f"""
+                            <div class="result-box">
+                                <strong>Result</strong><br><br>
+                                {result}
+                            </div>
+                            """,
+                            unsafe_allow_html=True
+                        )
+                    except Exception as e:
+                        st.error(f"Error: {e}")
 
 
             st.markdown(
@@ -336,21 +336,21 @@ else:
             st.warning("Please provide a topic or upload a PDF.")
         else:
             if st.button("Generate Research Report", key="report_button"):
-    if not user_text.strip() and not uploaded_pdf:
-        st.warning("Please provide a topic or upload a PDF.")
-    else:
-        try:
-            pdf_path = report_agent.run(user_text, uploaded_pdf)
-            with open(pdf_path, "rb") as f:
-                st.download_button(
-                    label="Download Research Report (PDF)",
-                    data=f,
-                    file_name="research_report.pdf",
-                    mime="application/pdf",
-                    key="download_report"
-                )
-        except Exception as e:
-            st.error(f"Error: {e}")
+                if not user_text.strip() and not uploaded_pdf:
+                    st.warning("Please provide a topic or upload a PDF.")
+                else:
+                    try:
+                        pdf_path = report_agent.run(user_text, uploaded_pdf)
+                        with open(pdf_path, "rb") as f:
+                            st.download_button(
+                                label="Download Research Report (PDF)",
+                                data=f,
+                                file_name="research_report.pdf",
+                                mime="application/pdf",
+                                key="download_report"
+                            )
+                    except Exception as e:
+                        st.error(f"Error: {e}")
 
 
             with open(pdf_path, "rb") as f:
@@ -368,3 +368,4 @@ report_agent = ResearchReportAgent()
 
 
         st.error(str(e))
+
